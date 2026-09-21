@@ -16,6 +16,44 @@ interface ApiResponse {
   error?: string;
 }
 
+const InputField = ({ 
+  label, 
+  name, 
+  icon, 
+  unit, 
+  placeholder,
+  value,
+  error,
+  onChange
+}: { 
+  label: string, 
+  name: string, 
+  icon: React.ReactNode, 
+  unit: string, 
+  placeholder: string,
+  value: string,
+  error?: string,
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}) => (
+  <div className="flex flex-col mb-4">
+    <label className="mb-1 text-sm font-medium text-gray-700 flex items-center gap-2">
+      {icon} {label}
+    </label>
+    <div className="relative">
+      <input
+        type="text"
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`w-full p-3 pr-12 border rounded-lg focus:ring-2 focus:outline-none transition-all ${error ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-green-200 focus:border-green-500'}`}
+      />
+      <span className="absolute right-4 top-3.5 text-gray-400 text-sm">{unit}</span>
+    </div>
+    {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
+  </div>
+);
+
 export default function Home() {
   const [formData, setFormData] = useState({
     N: '',
@@ -109,26 +147,6 @@ export default function Home() {
     }
   };
 
-  const InputField = ({ label, name, icon, unit, placeholder }: { label: string, name: string, icon: React.ReactNode, unit: string, placeholder: string }) => (
-    <div className="flex flex-col mb-4">
-      <label className="mb-1 text-sm font-medium text-gray-700 flex items-center gap-2">
-        {icon} {label}
-      </label>
-      <div className="relative">
-        <input
-          type="text"
-          name={name}
-          value={formData[name as keyof typeof formData]}
-          onChange={handleInputChange}
-          placeholder={placeholder}
-          className={`w-full p-3 pr-12 border rounded-lg focus:ring-2 focus:outline-none transition-all ${errors[name] ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-green-200 focus:border-green-500'}`}
-        />
-        <span className="absolute right-4 top-3.5 text-gray-400 text-sm">{unit}</span>
-      </div>
-      {errors[name] && <span className="text-red-500 text-xs mt-1">{errors[name]}</span>}
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-[#f3f6f4] text-gray-800 font-sans">
       {/* Header */}
@@ -155,14 +173,14 @@ export default function Home() {
 
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-              <InputField label="Nitrogen (N)" name="N" icon={<Leaf size={16} className="text-emerald-500" />} unit="mg/kg" placeholder="e.g. 90" />
-              <InputField label="Phosphorus (P)" name="P" icon={<Leaf size={16} className="text-emerald-500" />} unit="mg/kg" placeholder="e.g. 42" />
-              <InputField label="Potassium (K)" name="K" icon={<Leaf size={16} className="text-emerald-500" />} unit="mg/kg" placeholder="e.g. 43" />
-              <InputField label="Temperature" name="temperature" icon={<Thermometer size={16} className="text-orange-500" />} unit="°C" placeholder="e.g. 25" />
-              <InputField label="Humidity" name="humidity" icon={<Droplets size={16} className="text-blue-400" />} unit="%" placeholder="e.g. 80" />
-              <InputField label="Soil pH" name="ph" icon={<Activity size={16} className="text-purple-500" />} unit="" placeholder="e.g. 6.5" />
+              <InputField label="Nitrogen (N)" name="N" icon={<Leaf size={16} className="text-emerald-500" />} unit="mg/kg" placeholder="e.g. 90" value={formData.N} error={errors.N} onChange={handleInputChange} />
+              <InputField label="Phosphorus (P)" name="P" icon={<Leaf size={16} className="text-emerald-500" />} unit="mg/kg" placeholder="e.g. 42" value={formData.P} error={errors.P} onChange={handleInputChange} />
+              <InputField label="Potassium (K)" name="K" icon={<Leaf size={16} className="text-emerald-500" />} unit="mg/kg" placeholder="e.g. 43" value={formData.K} error={errors.K} onChange={handleInputChange} />
+              <InputField label="Temperature" name="temperature" icon={<Thermometer size={16} className="text-orange-500" />} unit="°C" placeholder="e.g. 25" value={formData.temperature} error={errors.temperature} onChange={handleInputChange} />
+              <InputField label="Humidity" name="humidity" icon={<Droplets size={16} className="text-blue-400" />} unit="%" placeholder="e.g. 80" value={formData.humidity} error={errors.humidity} onChange={handleInputChange} />
+              <InputField label="Soil pH" name="ph" icon={<Activity size={16} className="text-purple-500" />} unit="" placeholder="e.g. 6.5" value={formData.ph} error={errors.ph} onChange={handleInputChange} />
             </div>
-            <InputField label="Rainfall" name="rainfall" icon={<CloudRain size={16} className="text-blue-600" />} unit="mm" placeholder="e.g. 200" />
+            <InputField label="Rainfall" name="rainfall" icon={<CloudRain size={16} className="text-blue-600" />} unit="mm" placeholder="e.g. 200" value={formData.rainfall} error={errors.rainfall} onChange={handleInputChange} />
 
             <div className="mt-8 flex gap-3">
               <button
